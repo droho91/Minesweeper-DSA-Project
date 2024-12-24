@@ -15,7 +15,7 @@ public class GUI extends JFrame {
     public boolean flagger = false;
 	Date startDate = new Date();
     Date endDate;
-    int spacing = 4;
+    int spacing = 1;
     int neighs = 0;
     String vicMes = " Nothing yet!";
     public int mx = -100;
@@ -243,7 +243,7 @@ public class GUI extends JFrame {
                 vicMes = "You win!";}
 
             else if  (defeat==true){g.setColor(Color.RED);
-                vicMes = "You lose!";}
+                vicMes = "Uhmmmm!";}
 
         if (victory == true || defeat == true)
             {vicMesY= -50 + (int)(new Date().getTime() - endDate.getTime())/10;}
@@ -279,8 +279,7 @@ public class GUI extends JFrame {
             mx = e.getX();
             my = e.getY();
 
-            saveState(); // Save the current state before making any changes
-
+            
             if (mx >= minusX + 20 && mx <= minusX + 60 && my >= minusY + 20 && my <= minusY + 50) {
                 spacing--;
                 if (spacing < 1) {
@@ -298,10 +297,12 @@ public class GUI extends JFrame {
                 System.out.println("Redo works");
             } else if (inUndoButton()) {
                 undo();
+                System.out.println(happiness+ " "+resetter+" "+ victory+" "+ defeat);
                 System.out.println("Undo works");
             }
 
             if (inBoxX() != -1 && inBoxY() != -1) {
+            	saveState();
                 System.out.println("The mouse is in the [" + inBoxX() + "], Number of mine neighs:" + neighbours[inBoxX()][inBoxY()]);
                 if (flagger == true && revealed[inBoxX()][inBoxY()] == false) {
                     if (flagged[inBoxX()][inBoxY()] == false) {
@@ -352,7 +353,7 @@ public class GUI extends JFrame {
     
     private void saveState() {
         // Only save the state if the game is in progress (not during reset or victory/defeat)
-        if (!resetter && !victory && !defeat) {
+        if (!defeat) {
             undoStack.push(new GameState(mines, neighbours, revealed, flagged, spacing, happiness, resetter, victory, defeat));
             // Clear redo stack whenever a new state is saved
             redoStack.clear();
@@ -366,10 +367,7 @@ public class GUI extends JFrame {
         this.flagged = state.flagged;
         this.spacing = state.spacing;
         this.happiness=state.happiness;
-        this.resetter=state.resetter;
-        this.victory=state.victory;
         this.defeat=state.defeat;
-        
     }
 
     
